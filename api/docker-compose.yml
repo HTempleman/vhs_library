@@ -1,0 +1,29 @@
+version: '2.4'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - vhs-data:/var/lib/postgresql/data/
+  vhs_web:
+    build: 
+      context: .
+      dockerfile: Dockerfile-django
+    volumes:
+      - .:/code
+      ## Uncomment the following during production.
+      ##- /etc/letsencrypt/:/etc/letsencrypt/
+      ##- /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+    expose:
+      - "80"
+      - "443"
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - SECRET_KEY=developerkey
+    depends_on:
+      - db
+
+volumes:
+  vhs-data:
